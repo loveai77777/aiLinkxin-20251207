@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createSeoMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
@@ -228,10 +229,13 @@ export default function ToolsPage() {
                     {/* Logo (if exists) */}
                     {tool.logoUrl && (
                       <div className="mb-2">
-                        <img
+                        <Image
                           src={tool.logoUrl}
                           alt={tool.name}
+                          width={120}
+                          height={32}
                           className="h-8 w-auto object-contain"
+                          unoptimized
                         />
                       </div>
                     )}
@@ -307,7 +311,7 @@ export default function ToolsPage() {
 
               <div>
                 <h3 className="text-sm font-semibold text-slate-800 mb-2">
-                  What if I'm on a tight budget?
+                  What if I&apos;m on a tight budget?
                 </h3>
                 <p className="text-xs text-slate-600">
                   Many tools we recommend offer free tiers or affordable starter plans. We always note pricing

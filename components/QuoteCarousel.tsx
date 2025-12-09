@@ -140,7 +140,7 @@ export default function QuoteCarousel() {
     <div className="px-4">
       <div className="text-center">
         <p className="text-base md:text-lg font-medium text-slate-200 leading-relaxed line-clamp-1">
-          "{currentQuote.text}"
+          &quot;{currentQuote.text}&quot;
         </p>
       </div>
     </div>

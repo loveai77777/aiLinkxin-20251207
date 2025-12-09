@@ -177,7 +177,7 @@ export default function HomePage() {
                 Ready to explore your own AI front desk?
               </h2>
               <p className="mt-2 max-w-xl text-sm text-slate-200">
-                Share your website and booking process. We'll suggest a simple
+                Share your website and booking process. We&apos;ll suggest a simple
                 AI agent that you can launch first — and show you how it can
                 grow with you.
               </p>

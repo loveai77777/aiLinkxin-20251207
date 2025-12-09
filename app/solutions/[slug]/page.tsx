@@ -92,7 +92,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
           <h2>Try the AI front-desk demo</h2>
           <div className="card" style={{ padding: "1.5rem", marginTop: "1rem" }}>
             <p style={{ marginBottom: "1rem" }}>
-              Soon you'll be able to enter your website URL here and instantly test a demo AI front-desk agent.
+              Soon you&apos;ll be able to enter your website URL here and instantly test a demo AI front-desk agent.
             </p>
             <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
               <input
@@ -129,7 +129,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
         <section>
           <h2>Upgrade to a full AI front desk</h2>
           <p>
-            When you're ready, we can fully set up this agent for your business — including custom training with your FAQs and scripts, integration with your booking system, and connections to WhatsApp, SMS, and your customer database.
+            When you&apos;re ready, we can fully set up this agent for your business — including custom training with your FAQs and scripts, integration with your booking system, and connections to WhatsApp, SMS, and your customer database.
           </p>
           <Link
             href="/contact"
