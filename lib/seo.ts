@@ -31,7 +31,7 @@ export function createSeoMetadata(metadata: SeoMetadata): Metadata {
   const siteName = "AILINKXIN";
   const fullTitle = `${title} | ${siteName}`;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.ailinkxin.com";
-  const defaultImage = image || "https://www.ailinkxin.com/og-image";
+  const defaultImage = image || `${siteUrl}/og-image`;
 
   return {
     title: fullTitle,
