@@ -19,7 +19,7 @@ export default function PlaygroundPage() {
     {
       role: "assistant",
       content:
-        "Hi! I'm your demo AI front-desk agent for this website. Ask me about services, pricing, or booking, and I'll show you how I would respond.",
+        "Hi! I&apos;m your demo AI front-desk agent for this website. Ask me about services, pricing, or booking, and I&apos;ll show you how I would respond.",
     },
   ]);
   const [userInput, setUserInput] = useState("");
