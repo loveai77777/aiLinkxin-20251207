@@ -11,11 +11,18 @@ interface ChatResponse {
   conversationId: string;
 }
 
+interface AuthenticatedUser {
+  id: string;
+  [key: string]: any; // 允许其他属性
+}
+
 /**
  * 获取当前认证用户信息
  * 这里需要根据你的认证系统实现（JWT、Session、Supabase Auth 等）
  */
-async function getAuthenticatedUser(request: NextRequest) {
+async function getAuthenticatedUser(
+  request: NextRequest
+): Promise<AuthenticatedUser | null> {
   // 方法 1: 从 Authorization header 获取 JWT token
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {
