@@ -1,20 +1,10 @@
 import { ImageResponse } from 'next/og';
-import { NextRequest } from 'next/server';
 
 // Route segment config
 export const runtime = 'edge';
 
-// Image metadata
-export const alt = 'AILINKXIN - AI Agent System';
-export const size = {
-  width: 1200,
-  height: 630,
-};
-
-export const contentType = 'image/png';
-
 // Image generation
-export async function GET(request: NextRequest) {
+export async function GET() {
   return new ImageResponse(
     (
       <div
