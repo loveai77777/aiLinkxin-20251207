@@ -28,9 +28,10 @@ export function createSeoMetadata(metadata: SeoMetadata): Metadata {
     url,
   } = metadata;
 
-  const siteName = "新流";
+  const siteName = "AILINKXIN";
   const fullTitle = `${title} | ${siteName}`;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.ailinkxin.com";
+  const defaultImage = image || "https://www.ailinkxin.com/og-image.png";
 
   return {
     title: fullTitle,
@@ -42,14 +43,15 @@ export function createSeoMetadata(metadata: SeoMetadata): Metadata {
       type: ogType,
       url: url || siteUrl,
       siteName,
-      images: image
-        ? [
-            {
-              url: image,
-              alt: title,
-            },
-          ]
-        : undefined,
+      locale: "en_US",
+      images: [
+        {
+          url: defaultImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
       publishedTime,
       modifiedTime,
     },
@@ -57,7 +59,7 @@ export function createSeoMetadata(metadata: SeoMetadata): Metadata {
       card: "summary_large_image",
       title: fullTitle,
       description,
-      images: image ? [image] : undefined,
+      images: [defaultImage],
     },
   };
 }

@@ -12,18 +12,14 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.ailinkxin.com"), // change to your real domain if needed
+  metadataBase: new URL("https://www.ailinkxin.com"),
   title: {
-    // default: "新流 | 内容与服务网站",
     default:
       "AILINKXIN AI Automation Services | AI Customer Support & Marketing Automation",
-    // template: "%s | 新流",
     template: "%s | AILINKXIN Enterprise AI Automation Services",
   },
-  // description: "提供专业的 AI 自动化解决方案和实用内容指南。",
   description:
     "AILINKXIN | AI automation | intelligent customer service | automated marketing solutions.",
-  // keywords: ["AI", "自动化", "服务", "内容"],
   keywords: [
     "AI automation",
     "n8n workflows",
@@ -31,17 +27,28 @@ export const metadata: Metadata = {
     "AI customer support",
   ],
   openGraph: {
-    // title: "新流 | 内容与服务网站",
-    title:
-      "AILINKXIN | AI marketing automation | intelligent customer service",
-    // same idea as description above
+    title: "AILINKXIN | AI marketing automation | intelligent customer service",
     description:
       "AILINKXIN | AI automation | intelligent customer service | automated marketing solutions.",
-    url: "/",
-    // siteName: "新流",
+    url: "https://www.ailinkxin.com",
     siteName: "AILINKXIN Automation Services",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "https://www.ailinkxin.com/og-image.png", // 替换为你的 logo 图片 URL
+        width: 1200,
+        height: 630,
+        alt: "AILINKXIN - AI Automation Services",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AILINKXIN | AI Agent System | Intelligent Automation Services",
+    description:
+      "Professional AI agent system for intelligent customer service, automated marketing, and business automation solutions.",
+    images: ["https://www.ailinkxin.com/og-image.png"], // 替换为你的 logo 图片 URL
   },
 };
 
