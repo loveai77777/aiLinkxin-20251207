@@ -10,24 +10,24 @@ export const metadata: Metadata = createSeoMetadata({
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12 md:py-20 px-4">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-12 md:py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start">
           {/* Left Section - Text Content */}
-          <div className="flex flex-col space-y-6">
+          <div className="flex flex-col space-y-4 sm:space-y-6">
             {/* "Get in touch" Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white rounded-full border border-gray-200 shadow-sm w-fit">
-              <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">Get in touch</span>
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 bg-white rounded-full border border-gray-200 shadow-sm w-fit">
+              <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-pink-500 rounded-full"></div>
+              <span className="text-xs sm:text-sm font-medium text-gray-700">Get in touch</span>
             </div>
 
             {/* Main Title */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
               Get started with our plan
             </h1>
 
             {/* Description */}
-            <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
               Enter your details, and our team will reach out to design a custom plan tailored to your needs.
             </p>
           </div>

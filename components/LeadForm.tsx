@@ -72,10 +72,10 @@ export default function LeadForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] p-8 md:p-10 ${className}`}>
+    <form onSubmit={handleSubmit} className={`bg-white rounded-xl sm:rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] p-5 sm:p-6 md:p-8 lg:p-10 ${className}`}>
       {/* Email Field */}
-      <div className="mb-6">
-        <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
+      <div className="mb-4 sm:mb-6">
+        <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-900 mb-1.5 sm:mb-2">
           Work email
         </label>
         <input
@@ -87,13 +87,14 @@ export default function LeadForm({
           required
           disabled={isSubmitting}
           placeholder="your.email@example.com"
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-[48px]"
+          style={{ WebkitTapHighlightColor: "transparent" }}
         />
       </div>
 
       {/* Message Field */}
-      <div className="mb-8">
-        <label htmlFor="message" className="block text-sm font-medium text-gray-900 mb-2">
+      <div className="mb-6 sm:mb-8">
+        <label htmlFor="message" className="block text-xs sm:text-sm font-medium text-gray-900 mb-1.5 sm:mb-2">
           How can we help you?
         </label>
         <textarea
@@ -102,16 +103,17 @@ export default function LeadForm({
           value={formData.message}
           onChange={handleChange}
           required
-          rows={6}
+          rows={5}
           disabled={isSubmitting}
           placeholder="Write your message..."
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ WebkitTapHighlightColor: "transparent" }}
         />
       </div>
 
       {/* Submit Button with Gradient Border */}
       <div 
-        className="relative rounded-lg p-[2px] w-fit"
+        className="relative rounded-lg p-[2px] w-full sm:w-fit"
         style={{
           background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
         }}
@@ -119,7 +121,8 @@ export default function LeadForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="relative py-2 px-6 bg-black text-white text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-900 focus:outline-none"
+          className="relative w-full sm:w-auto py-2.5 sm:py-2 px-5 sm:px-6 bg-black text-white text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-900 active:scale-95 focus:outline-none touch-manipulation min-h-[44px] sm:min-h-[48px]"
+          style={{ WebkitTapHighlightColor: "transparent" }}
         >
           {isSubmitting ? "Submitting..." : "Submit"}
         </button>
@@ -127,10 +130,10 @@ export default function LeadForm({
 
       {/* Status Messages */}
       {submitStatus === "success" && (
-        <p className="mt-4 text-sm text-green-600">Submission successful! We will contact you soon.</p>
+        <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-green-600">Submission successful! We will contact you soon.</p>
       )}
       {submitStatus === "error" && (
-        <p className="mt-4 text-sm text-red-600">Submission failed, please try again later.</p>
+        <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-red-600">Submission failed, please try again later.</p>
       )}
     </form>
   );

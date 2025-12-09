@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 
 interface NavItem {
   href: string;
@@ -19,10 +19,27 @@ const navigationItems: NavItem[] = [
 ];
 
 function Header() {
-  // ① 拿到当前路径，例如 "/"、"/solutions"、"/playbook/xxx"
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const isPlaybookPage = pathname.startsWith("/playbook");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // 关闭菜单当路径改变时
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  // 阻止背景滚动当菜单打开时
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileMenuOpen]);
 
   return (
     <header 
@@ -35,11 +52,11 @@ function Header() {
           : "bg-white border-b border-gray-200 z-50"
       }
     >
-      <div className="mx-auto flex h-20 max-w-4xl items-center justify-between pl-2 pr-6">
+      <div className="mx-auto flex h-16 md:h-20 max-w-4xl items-center justify-between px-4 md:pl-2 md:pr-6">
         {/* 左侧品牌区域 */}
-        <div className="brand -ml-4">
+        <div className="brand -ml-2 md:-ml-4">
           <Link href="/" prefetch={true} className="brand-link flex flex-col" aria-label="AILINKXIN Home">
-            <span className={`text-2xl md:text-3xl font-bold ${
+            <span className={`text-xl sm:text-2xl md:text-3xl font-bold ${
               isHomePage || isPlaybookPage ? "text-white" : "text-gray-900"
             }`}>
               AILINKXIN
@@ -47,15 +64,14 @@ function Header() {
           </Link>
         </div>
 
-        {/* 右侧导航 */}
-        <nav role="navigation" aria-label="Main navigation">
-          <ul className="flex gap-4 md:gap-6 list-none m-0 p-0 flex-wrap">
+        {/* 桌面端导航 */}
+        <nav role="navigation" aria-label="Main navigation" className="hidden md:block">
+          <ul className="flex gap-4 md:gap-6 list-none m-0 p-0">
             {navigationItems.map((item) => {
-              // ② 当前是否激活（高亮）
               const isActive =
                 item.href === "/"
-                  ? pathname === "/" // Home 只在首页高亮
-                  : pathname.startsWith(item.href); // 其它栏目，子路由也高亮，如 /solutions/xxx
+                  ? pathname === "/"
+                  : pathname.startsWith(item.href);
 
               return (
                 <li key={item.href}>
@@ -78,6 +94,81 @@ function Header() {
             })}
           </ul>
         </nav>
+
+        {/* 移动端汉堡菜单按钮 */}
+        <button
+          type="button"
+          className="md:hidden relative z-50 p-2 touch-manipulation"
+          aria-label="Toggle menu"
+          aria-expanded={isMobileMenuOpen}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          style={{ WebkitTapHighlightColor: "transparent" }}
+        >
+          <div className="w-6 h-6 flex flex-col justify-center gap-1.5">
+            <span
+              className={`block h-0.5 w-6 bg-current transition-all duration-300 ${
+                isHomePage || isPlaybookPage ? "text-white" : "text-gray-900"
+              } ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
+            />
+            <span
+              className={`block h-0.5 w-6 bg-current transition-all duration-300 ${
+                isHomePage || isPlaybookPage ? "text-white" : "text-gray-900"
+              } ${isMobileMenuOpen ? "opacity-0" : ""}`}
+            />
+            <span
+              className={`block h-0.5 w-6 bg-current transition-all duration-300 ${
+                isHomePage || isPlaybookPage ? "text-white" : "text-gray-900"
+              } ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+            />
+          </div>
+        </button>
+
+        {/* 移动端菜单覆盖层 */}
+        {isMobileMenuOpen && (
+          <>
+            {/* 背景遮罩 */}
+            <div
+              className="fixed inset-0 bg-black/60 z-40 md:hidden"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-hidden="true"
+            />
+            
+            {/* 滑动菜单 */}
+            <nav
+              role="navigation"
+              aria-label="Mobile navigation"
+              className="fixed top-16 right-0 bottom-0 w-64 bg-gradient-to-b from-[#05030d] via-[#050018] to-[#120428] z-40 md:hidden transform transition-transform duration-300 ease-out shadow-2xl overflow-y-auto"
+            >
+              <ul className="flex flex-col p-6 gap-1">
+                {navigationItems.map((item) => {
+                  const isActive =
+                    item.href === "/"
+                      ? pathname === "/"
+                      : pathname.startsWith(item.href);
+
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        prefetch={true}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`block px-4 py-3 text-base font-medium rounded-lg transition-all touch-manipulation active:scale-95 ${
+                          isActive
+                            ? "bg-purple-500/20 text-purple-300 border-l-4 border-purple-300"
+                            : "text-white/90 hover:bg-white/10 hover:text-white"
+                        }`}
+                        aria-current={isActive ? "page" : undefined}
+                        style={{ WebkitTapHighlightColor: "transparent" }}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </>
+        )}
       </div>
     </header>
   );
