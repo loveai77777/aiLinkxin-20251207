@@ -19,17 +19,19 @@ export const metadata: Metadata = {
     template: "%s | AILINKXIN Enterprise AI Automation Services",
   },
   description:
-    "AILINKXIN | AI automation | intelligent customer service | automated marketing solutions.",
+    "Professional AI agent system for intelligent customer service, automated marketing, and business automation solutions.",
   keywords: [
+    "AI agent system",
     "AI automation",
-    "n8n workflows",
-    "automated marketing",
     "AI customer support",
+    "automated marketing",
+    "intelligent agents",
+    "business automation",
   ],
   openGraph: {
-    title: "AILINKXIN | AI marketing automation | intelligent customer service",
+    title: "AILINKXIN | AI Agent System | Intelligent Automation Services",
     description:
-      "AILINKXIN | AI automation | intelligent customer service | automated marketing solutions.",
+      "Professional AI agent system for intelligent customer service, automated marketing, and business automation solutions.",
     url: "https://www.ailinkxin.com",
     siteName: "AILINKXIN Automation Services",
     locale: "en_US",
