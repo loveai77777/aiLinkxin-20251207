@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | AILINKXIN Enterprise AI Automation Services",
   },
   description:
-    "Professional AI agent system for intelligent customer service, automated marketing, and business automation solutions.",
+    "Professional AI agent system for business automation.",
   keywords: [
     "AI agent system",
     "AI automation",
@@ -31,17 +31,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AILINKXIN | AI Agent System | Intelligent Automation Services",
     description:
-      "Professional AI agent system for intelligent customer service, automated marketing, and business automation solutions.",
+      "Professional AI agent system for business automation.",
     url: "https://www.ailinkxin.com",
     siteName: "AILINKXIN Automation Services",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://www.ailinkxin.com/og-image.png", // 替换为你的 logo 图片 URL
+        url: "https://www.ailinkxin.com/og-image", // 动态生成的 OG 图片
         width: 1200,
         height: 630,
-        alt: "AILINKXIN - AI Automation Services",
+        alt: "AILINKXIN - AI Agent System",
       },
     ],
   },
@@ -49,8 +49,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AILINKXIN | AI Agent System | Intelligent Automation Services",
     description:
-      "Professional AI agent system for intelligent customer service, automated marketing, and business automation solutions.",
-    images: ["https://www.ailinkxin.com/og-image.png"], // 替换为你的 logo 图片 URL
+      "Professional AI agent system for business automation.",
+    images: ["https://www.ailinkxin.com/og-image"], // 动态生成的 OG 图片
   },
 };
 
