@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { NextRequest } from 'next/server';
 
 // Route segment config
 export const runtime = 'edge';
@@ -13,7 +14,7 @@ export const size = {
 export const contentType = 'image/png';
 
 // Image generation
-export default async function Image() {
+export async function GET(request: NextRequest) {
   return new ImageResponse(
     (
       <div
@@ -60,7 +61,7 @@ export default async function Image() {
             lineHeight: 1.5,
           }}
         >
-          Professional AI agent system for intelligent customer service, automated marketing, and business automation
+          Professional AI agent system for business automation
         </div>
       </div>
     ),
