@@ -29,6 +29,10 @@ function formatReadingTime(minutes: number | null): string {
 
 // Fetch playbooks by tag
 async function getPlaybooksByTag(tagSlug: string) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return { playbooks: [], tagName: null };
+  }
+  
   const supabase = createSupabaseClient();
 
   // First, get the tag label from slug

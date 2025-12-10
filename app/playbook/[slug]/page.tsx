@@ -29,6 +29,10 @@ function formatReadingTime(minutes: number | null): string {
 
 // Fetch playbook detail from Supabase
 async function getPlaybookBySlug(slug: string) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return { playbook: null, categoryName: null, tags: [], error: null };
+  }
+  
   const supabase = createSupabaseClient();
 
   // Fetch playbook with category join

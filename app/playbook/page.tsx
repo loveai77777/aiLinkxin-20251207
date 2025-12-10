@@ -53,6 +53,12 @@ function formatReadingTime(minutes: number | null): string {
 
 // Fetch playbooks from Supabase
 async function getPlaybooks(): Promise<PlaybookCard[]> {
+  // Check if Supabase env vars are configured
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.warn("Supabase environment variables not configured, returning empty playbooks list");
+    return [];
+  }
+  
   const supabase = createSupabaseClient();
 
   // Fetch all published playbooks with category join
@@ -153,6 +159,10 @@ async function getPlaybooks(): Promise<PlaybookCard[]> {
 
 // Fetch filter data (categories and tags) from Supabase
 async function getFilterData(): Promise<PlaybookFilterData> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return { categories: [], tags: [] };
+  }
+  
   const supabase = createSupabaseClient();
 
   // Fetch all categories
@@ -175,6 +185,10 @@ async function getFilterData(): Promise<PlaybookFilterData> {
 
 // Fetch categories with their associated tags
 async function getCategoriesWithTags() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return [];
+  }
+  
   const supabase = createSupabaseClient();
 
   // Fetch all categories

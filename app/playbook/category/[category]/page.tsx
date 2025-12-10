@@ -29,6 +29,10 @@ function formatReadingTime(minutes: number | null): string {
 
 // Fetch playbooks by category
 async function getPlaybooksByCategory(categorySlug: string) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return { playbooks: [], categoryName: null };
+  }
+  
   const supabase = createSupabaseClient();
 
   // First, get the category name from slug
