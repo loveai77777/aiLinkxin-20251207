@@ -126,32 +126,26 @@ export default function ToolsPage() {
           {/* Eyebrow */}
           <div className="mb-6">
             <span className="inline-block px-4 py-1.5 bg-pink-100 text-pink-500 text-xs font-semibold rounded-full border border-white">
-              Curated tools & resources
+              ailinkxin picks
             </span>
           </div>
 
           {/* H1 */}
           <h1 className="text-3xl sm:text-4xl font-semibold mb-6 text-slate-800">
-            Tools & Resources for AI Automation
+            Tried, Loved, and Widely Used
           </h1>
 
           {/* Body Text */}
           <div className="space-y-3 text-sm sm:text-base text-slate-600 w-full">
             <p>
-              These are personally selected tools for AI automation and AI front desk solutions.
-            </p>
-            <p>
-              Our goal is to save you time and reduce trial-and-error by sharing tools we actually use and trust.
-            </p>
-            <p>
-              Some links are affiliate links, but our recommendations stay honest—we only share what we believe will help you.
+              share the ones that also hope work well for you
             </p>
           </div>
         </div>
       </section>
 
       {/* Filters Section */}
-      <section className="border-t border-white bg-white/50 w-full">
+      <section className="border-t border-pink-200 bg-pink-50 w-full">
         <div className="w-full py-8 space-y-6">
           {/* Categories */}
           <div>
@@ -199,7 +193,7 @@ export default function ToolsPage() {
             <h2 className="text-2xl font-semibold text-slate-800">All tools & resources</h2>
             <input
               type="text"
-              placeholder="Search tools..."
+              placeholder="Search"
               // TODO: Add search functionality
               className="w-full sm:w-auto sm:max-w-xs px-4 py-2 bg-white border border-white rounded-lg text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-pink-300 transition-colors"
             />
@@ -266,70 +260,6 @@ export default function ToolsPage() {
               ))}
             </div>
           )}
-        </div>
-      </section>
-
-      {/* Disclaimer & FAQ Section */}
-      <section className="border-t border-white bg-white/50 w-full">
-        <div className="w-full py-10 space-y-6">
-          {/* Disclaimer */}
-          <div className="space-y-3 text-sm text-slate-600">
-            <p>
-              Some links on this page are affiliate links. This means if you click through and make a purchase,
-              we may receive a small commission at no extra cost to you.
-            </p>
-            <p>
-              We only recommend tools and resources that we genuinely believe are helpful and that we have
-              personally used or thoroughly researched.
-            </p>
-          </div>
-
-          {/* FAQ */}
-          <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-slate-800">Frequently Asked Questions</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-sm font-semibold text-slate-800 mb-2">
-                  Do you get paid for these recommendations?
-                </h3>
-                <p className="text-xs text-slate-600">
-                  Some links are affiliate links, which means we may earn a small commission if you make a purchase.
-                  This comes at no additional cost to you and helps us maintain this resource library.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold text-slate-800 mb-2">
-                  Will you recommend tools only because of commissions?
-                </h3>
-                <p className="text-xs text-slate-600">
-                  No. We only include tools we genuinely use, trust, and believe will help you. Our reputation
-                  depends on honest recommendations, not quick commissions.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold text-slate-800 mb-2">
-                  What if I&apos;m on a tight budget?
-                </h3>
-                <p className="text-xs text-slate-600">
-                  Many tools we recommend offer free tiers or affordable starter plans. We always note pricing
-                  information and highlight budget-friendly options when available.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold text-slate-800 mb-2">
-                  How often do you update this list?
-                </h3>
-                <p className="text-xs text-slate-600">
-                  We regularly review and update our recommendations based on new tools, changes in pricing,
-                  and our own experience using these products.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
     </main>
