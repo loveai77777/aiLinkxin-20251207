@@ -8,17 +8,19 @@ export function createSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+  // During build time, if env vars are missing, return a mock client to prevent build failures
+  // The functions using this client should handle empty results gracefully
   if (!supabaseUrl || !supabaseAnonKey) {
-    const missingVars = [];
-    if (!supabaseUrl) missingVars.push("NEXT_PUBLIC_SUPABASE_URL");
-    if (!supabaseAnonKey) missingVars.push("NEXT_PUBLIC_SUPABASE_ANON_KEY");
-
-    throw new Error(
-      `Missing Supabase environment variables: ${missingVars.join(", ")}.\n\n` +
-      `Please create a .env.local file in the project root with:\n` +
-      `NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url\n` +
-      `NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key\n\n` +
-      `You can find these values in your Supabase project settings: https://app.supabase.com/project/_/settings/api`
+    // Return a client with dummy values - queries will fail gracefully
+    // This allows the build to succeed even without env vars configured
+    console.warn(
+      "⚠️ Supabase environment variables are missing. Playbook features will not work.\n" +
+      "Please configure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel."
+    );
+    // Use placeholder values - actual queries will return empty results
+    return createClient(
+      supabaseUrl || "https://placeholder.supabase.co",
+      supabaseAnonKey || "placeholder-key"
     );
   }
 
