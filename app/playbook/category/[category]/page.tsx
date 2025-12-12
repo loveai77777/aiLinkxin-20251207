@@ -4,6 +4,9 @@ import { createSeoMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+// 强制动态渲染：确保每次请求都从 Supabase 重新获取最新数据
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{
     category: string;
