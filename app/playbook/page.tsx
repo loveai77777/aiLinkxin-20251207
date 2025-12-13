@@ -5,6 +5,7 @@ import { createSupabaseClient } from "@/lib/supabaseClient";
 import PlaybookNav from "@/components/PlaybookNav";
 import PlaybookCard, { type PlaybookCardData } from "@/components/playbook/PlaybookCard";
 import PlaybookBrowseClient from "./PlaybookBrowseClient";
+import { getPublishedPlaybooks } from "@/lib/playbooks-db";
 
 // Force dynamic rendering to ensure fresh data from Supabase
 export const dynamic = "force-dynamic";
@@ -15,122 +16,6 @@ export const metadata: Metadata = createSeoMetadata({
     "Practical guides and tutorials to help you master AI automation and business optimization step by step.",
   keywords: ["AI automation", "playbook", "tutorials", "workflow design"],
 });
-
-// Fetch playbooks from Supabase - NO filters, simple query
-async function getPlaybooks(): Promise<{
-  playbooks: PlaybookCardData[];
-  error: string | null;
-}> {
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  ) {
-    console.warn(
-      "Supabase environment variables not configured, returning empty playbooks list"
-    );
-    return { playbooks: [], error: null };
-  }
-
-  const supabase = createSupabaseClient();
-
-  // TODO: Add is_featured or sort_order field if available in DB
-  const { data, error } = await supabase
-    .from("playbooks")
-    .select("id, slug, title, excerpt, updated_at, has_affiliate_links, is_featured, sort_order")
-    .order("updated_at", { ascending: false });
-
-  // Log both data and error for debugging
-  console.log("[playbook] rows:", data?.length);
-  console.log("[playbook] error:", error);
-
-  // Check for RLS/permission errors
-  const isRLSError =
-    error &&
-    (error.code === "PGRST116" ||
-      error.message?.toLowerCase().includes("permission") ||
-      error.message?.toLowerCase().includes("policy") ||
-      error.message?.toLowerCase().includes("row-level security") ||
-      error.message?.toLowerCase().includes("rls"));
-
-  if (isRLSError) {
-    return {
-      playbooks: [],
-      error: "RLS",
-    };
-  }
-
-  if (error) {
-    console.error("Error fetching playbooks:", error);
-    return { playbooks: [], error: error.message || "Unknown error" };
-  }
-
-  if (!data || data.length === 0) {
-    return { playbooks: [], error: null };
-  }
-
-  // Fetch tags for all playbooks (optional, won't break if this fails)
-  const playbookIds = data.map((p) => p.id);
-  const { data: playbookTagsData, error: tagsError } = await supabase
-    .from("playbook_tags")
-    .select(
-      `
-      playbook_id,
-      tags!tag_id(id, slug, label)
-    `
-    )
-    .in("playbook_id", playbookIds);
-
-  if (tagsError) {
-    console.error("Error fetching tags:", tagsError);
-  }
-
-  // Create a map of playbook_id -> tags
-  const tagsMap = new Map<
-    number,
-    { id: number; label: string; slug: string }[]
-  >();
-  if (playbookTagsData) {
-    playbookTagsData.forEach((pt) => {
-      const playbookId = pt.playbook_id;
-      const tag = pt.tags as unknown as
-        | { id: number; slug: string; label: string }
-        | null;
-      if (
-        tag &&
-        typeof tag === "object" &&
-        "id" in tag &&
-        "slug" in tag &&
-        "label" in tag
-      ) {
-        if (!tagsMap.has(playbookId)) {
-          tagsMap.set(playbookId, []);
-        }
-        tagsMap.get(playbookId)!.push({
-          id: Number(tag.id),
-          label: String(tag.label),
-          slug: String(tag.slug),
-        });
-      }
-    });
-  }
-
-  // Map data to PlaybookCardData type
-  const playbooks: PlaybookCardData[] = data.map((p: any) => {
-    return {
-      id: p.id,
-      slug: p.slug,
-      title: p.title,
-      summary: p.excerpt || null,
-      updatedAt: p.updated_at || null,
-      publishedAt: null,
-      readingMinutes: null,
-      tags: tagsMap.get(p.id) || [],
-      hasAffiliateLinks: p.has_affiliate_links || false,
-    };
-  });
-
-  return { playbooks, error: null };
-}
 
 // Fetch filter data (categories and tags) from Supabase
 async function getFilterData(): Promise<{
@@ -228,7 +113,7 @@ async function getCategoriesWithTags() {
 }
 
 export default async function PlaybookPage() {
-  const { playbooks, error } = await getPlaybooks();
+  const playbooks = await getPublishedPlaybooks();
   const filterData = await getFilterData();
   const categoriesWithTags = await getCategoriesWithTags();
 
@@ -252,20 +137,6 @@ export default async function PlaybookPage() {
           </div>
         </section>
 
-        {/* RLS Error Warning Banner */}
-        {error === "RLS" && (
-          <div className="mb-8 mx-auto max-w-3xl">
-            <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4">
-              <p className="text-red-400 font-medium">
-                Playbooks cannot be loaded due to access policy (RLS).
-              </p>
-              <p className="text-red-300/80 text-sm mt-1">
-                Please check your Supabase Row Level Security policies for the
-                playbooks table.
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* Browse and Filter Client Component */}
         <PlaybookBrowseClient

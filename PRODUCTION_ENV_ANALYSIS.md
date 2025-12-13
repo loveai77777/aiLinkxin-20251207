@@ -235,3 +235,4 @@ pm2 reload ecosystem.config.js
 **Generated:** Based on repository scan
 **Deployment Method:** PM2 + Nginx (not Docker)
 
+

@@ -9,9 +9,9 @@ function Footer() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const isPlaybookPage = pathname.startsWith("/playbook");
-  const isToolsPage = pathname.startsWith("/tools");
+  const isPicksPage = pathname.startsWith("/picks") || pathname.startsWith("/tools");
 
-  if (isToolsPage) {
+  if (isPicksPage) {
     return (
       <footer className="bg-pink-50 text-black border-none">
         <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">

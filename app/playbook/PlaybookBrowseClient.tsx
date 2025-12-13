@@ -224,7 +224,8 @@ export default function PlaybookBrowseClient({
       )}
 
       {/* Main Grid */}
-      {filteredPlaybooks.length === 0 ? (
+      {/* Check if there are any playbooks to show (featured + filtered) */}
+      {filteredPlaybooks.length === 0 && featuredPlaybooks.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-white text-xl mb-4">No playbooks found</p>
           <p className="text-gray-400 text-sm mb-6">
@@ -249,19 +250,24 @@ export default function PlaybookBrowseClient({
         </div>
       ) : (
         <>
-          <div className="mb-4">
-            <p className="text-sm text-gray-400">
-              Showing {filteredPlaybooks.length} playbook{filteredPlaybooks.length !== 1 ? "s" : ""}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredPlaybooks.map((playbook) => (
-              <PlaybookCard key={playbook.id} playbook={playbook} />
-            ))}
-          </div>
+          {filteredPlaybooks.length > 0 && (
+            <div className="mb-4">
+              <p className="text-sm text-gray-400">
+                Showing {filteredPlaybooks.length} playbook{filteredPlaybooks.length !== 1 ? "s" : ""}
+              </p>
+            </div>
+          )}
+          {filteredPlaybooks.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredPlaybooks.map((playbook) => (
+                <PlaybookCard key={playbook.id} playbook={playbook} />
+              ))}
+            </div>
+          )}
         </>
       )}
     </div>
   );
 }
+
 

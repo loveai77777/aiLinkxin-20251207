@@ -4,12 +4,14 @@ import { createSupabaseClient } from "@/lib/supabaseClient";
 import { createSeoMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 import { getRecommendedPlaybooks, getApprovedComments } from "@/lib/playbook";
+import { getPlaybookBySlug as getPlaybookBySlugFromDB } from "@/lib/playbooks-db";
 import PlaybookAudioPlayer from "@/components/PlaybookAudioPlayer";
 import PlaybookComments from "@/components/PlaybookComments";
 import ProductCard, { type ProductData } from "@/components/playbook/ProductCard";
 import ProductRecommendationSection, {
   type ProductLinkData,
 } from "@/components/playbook/ProductRecommendationSection";
+import MarkdownContent from "@/components/MarkdownContent";
 
 // Force dynamic rendering to ensure fresh data from Supabase
 export const dynamic = "force-dynamic";
@@ -130,52 +132,28 @@ async function getProductRecommendations(playbookId: number): Promise<{
   return { primaryProduct, productLinks };
 }
 
-// Fetch playbook detail from Supabase
+// Fetch playbook detail from Supabase with category and tags
 async function getPlaybookBySlug(slug: string) {
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  ) {
+  const playbook = await getPlaybookBySlugFromDB(slug);
+
+  if (!playbook) {
     return { playbook: null, categoryName: null, tags: [], error: null };
   }
 
   const supabase = createSupabaseClient();
 
-  // Fetch playbook with category join
-  // TODO: Add has_affiliate_links, affiliate_disclosure_override, primary_product_id if they exist
-  const { data: playbook, error } = await supabase
-    .from("playbooks")
-    .select(
-      `
-      id,
-      slug,
-      title,
-      subtitle,
-      summary,
-      content_markdown,
-      cover_image_url,
-      difficulty_level,
-      reading_minutes,
-      view_count,
-      like_count,
-      comment_count,
-      average_rating,
-      published_at,
-      category_id,
-      audio_url,
-      audio_duration_seconds,
-      has_affiliate_links,
-      affiliate_disclosure_override,
-      primary_product_id,
-      playbook_categories!category_id(name)
-    `
-    )
-    .eq("slug", slug)
-    .eq("status", "published")
-    .single();
+  // Fetch category name
+  let categoryName: string | null = null;
+  if (playbook.category_id) {
+    const { data: categoryData } = await supabase
+      .from("playbook_categories")
+      .select("name")
+      .eq("id", playbook.category_id)
+      .single();
 
-  if (error || !playbook) {
-    return { playbook: null, categoryName: null, tags: [], error };
+    if (categoryData) {
+      categoryName = categoryData.name;
+    }
   }
 
   // Fetch tags for this playbook
@@ -210,15 +188,9 @@ async function getPlaybookBySlug(slug: string) {
     });
   }
 
-  const categoryData = playbook.playbook_categories as unknown as
-    | { name: string }
-    | { name: string }[]
-    | null;
-  const category = Array.isArray(categoryData) ? categoryData[0] : categoryData;
-
   return {
     playbook,
-    categoryName: category?.name || null,
+    categoryName,
     tags,
     error: null,
   };
@@ -238,6 +210,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     keywords: [],
     ogType: "article",
     publishedTime: playbook.published_at || undefined,
+    modifiedTime: playbook.updated_at || undefined,
   });
 }
 
@@ -276,12 +249,6 @@ export default async function PlaybookDetailPage({ params }: PageProps) {
     !!primaryProduct ||
     productLinks.length > 0;
 
-  // Split content into sections for inline product placement
-  // Simple approach: split by double newlines or markdown headers
-  const contentSections = playbook.content_markdown
-    ? playbook.content_markdown.split(/\n\n+/)
-    : [];
-  const midPoint = Math.floor(contentSections.length / 2);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
@@ -336,6 +303,11 @@ export default async function PlaybookDetailPage({ params }: PageProps) {
             {playbook.published_at && (
               <time dateTime={playbook.published_at}>
                 Published: {formatDate(playbook.published_at)}
+              </time>
+            )}
+            {playbook.updated_at && playbook.updated_at !== playbook.published_at && (
+              <time dateTime={playbook.updated_at}>
+                Updated: {formatDate(playbook.updated_at)}
               </time>
             )}
             {playbook.difficulty_level && (
@@ -438,44 +410,9 @@ export default async function PlaybookDetailPage({ params }: PageProps) {
         {/* Content with Inline Products */}
         {playbook.content_markdown && (
           <section className="prose prose-invert max-w-none mb-12">
-            {/* First half of content */}
-            {contentSections.slice(0, midPoint).map((section, idx) => (
-              <div
-                key={`section-${idx}`}
-                className="whitespace-pre-wrap text-white leading-relaxed mb-6"
-              >
-                {section}
-              </div>
-            ))}
-
-            {/* Inline Product Recommendations */}
-            {inlineProducts.length > 0 && (
-              <div className="my-8 p-4 bg-slate-900 border border-slate-800 rounded-lg">
-                <p className="text-xs text-gray-500 mb-3 uppercase tracking-wide">
-                  Recommended Resources
-                </p>
-                <div className="space-y-3">
-                  {inlineProducts.map((productLink, idx) => (
-                    <ProductCard
-                      key={`inline-${productLink.product.id}-${idx}`}
-                      product={productLink.product}
-                      ctaText={productLink.ctaText}
-                      compact={true}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Second half of content */}
-            {contentSections.slice(midPoint).map((section, idx) => (
-              <div
-                key={`section-${midPoint + idx}`}
-                className="whitespace-pre-wrap text-white leading-relaxed mb-6"
-              >
-                {section}
-              </div>
-            ))}
+            <div className="text-white leading-relaxed">
+              <MarkdownContent content={playbook.content_markdown} />
+            </div>
           </section>
         )}
 

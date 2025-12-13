@@ -435,3 +435,13 @@ article h2 {
   z-index: 9999 !important;
 }
 
+/* Hide scrollbar for horizontal scrolling chips */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
