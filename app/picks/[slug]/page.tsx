@@ -232,3 +232,4 @@ export default async function ProductDetailPage({ params }: PageProps) {
     </div>
   );
 }
+

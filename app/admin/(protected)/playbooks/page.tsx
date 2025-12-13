@@ -1,4 +1,3 @@
-import { requireAuth } from "@/lib/admin/auth";
 import { createSupabaseClient } from "@/lib/supabaseClient";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -22,12 +21,10 @@ async function getPlaybooks() {
 }
 
 export default async function AdminPlaybooksPage() {
-  await requireAuth();
   const playbooks = await getPlaybooks();
 
   async function toggleStatus(formData: FormData) {
     "use server";
-    await requireAuth();
     
     const id = formData.get("id");
     const currentStatus = formData.get("currentStatus");
@@ -135,3 +132,4 @@ export default async function AdminPlaybooksPage() {
     </div>
   );
 }
+

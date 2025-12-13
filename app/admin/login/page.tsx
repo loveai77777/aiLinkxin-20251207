@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClientSupabaseClient } from "@/lib/supabase/client";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -17,28 +15,24 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const supabase = createClientSupabaseClient();
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
       });
 
-      if (signInError) {
-        setError(signInError.message);
-        setLoading(false);
+      const data = await response.json();
+
+      if (!data.ok) {
+        setError(data.error || "Invalid password");
         return;
       }
 
-      if (data.session) {
-        // Set session cookies manually for server-side access
-        document.cookie = `sb-access-token=${data.session.access_token}; path=/; max-age=3600; SameSite=Lax`;
-        document.cookie = `sb-refresh-token=${data.session.refresh_token}; path=/; max-age=604800; SameSite=Lax`;
-        
-        router.push("/admin/playbooks");
-        router.refresh();
-      }
+      // Success - redirect to admin picks if exists, else admin dashboard
+      router.replace("/admin/picks");
     } catch (err) {
       setError("An unexpected error occurred");
+    } finally {
       setLoading(false);
     }
   };
@@ -55,20 +49,6 @@ export default function AdminLoginPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
-          </div>
-
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -95,3 +75,5 @@ export default function AdminLoginPage() {
     </div>
   );
 }
+
+

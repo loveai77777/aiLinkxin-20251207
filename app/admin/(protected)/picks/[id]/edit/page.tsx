@@ -1,4 +1,3 @@
-import { requireAuth } from "@/lib/admin/auth";
 import { createSupabaseClient } from "@/lib/supabaseClient";
 import { notFound } from "next/navigation";
 import ProductForm from "@/components/admin/ProductForm";
@@ -42,7 +41,6 @@ export default async function EditProductPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAuth();
   const { id } = await params;
   const product = await getProduct(parseInt(id));
   const links = await getProductLinks(parseInt(id));
@@ -58,3 +56,4 @@ export default async function EditProductPage({
     </div>
   );
 }
+

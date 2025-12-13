@@ -186,3 +186,4 @@ export async function getPicksFilterData(): Promise<{
     tags: Array.from(tagsSet).sort(),
   };
 }
+

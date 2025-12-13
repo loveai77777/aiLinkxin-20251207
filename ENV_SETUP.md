@@ -23,6 +23,12 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ```
 用于 SEO metadata 中的 Open Graph URL。开发环境可以使用 `http://localhost:3000`。
 
+### 管理员密码
+```
+ADMIN_PASSWORD=your-secure-password
+```
+用于后台管理系统登录。访问 `/admin/login` 时需要使用此密码。
+
 ## 示例配置
 
 ```env
@@ -31,12 +37,14 @@ N8N_WEBHOOK_URL=http://localhost:5678/webhook/test
 DIFY_API_BASE_URL=https://api.dify.ai/v1
 DIFY_API_KEY=app-xxxxxxxxxxxxx
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+ADMIN_PASSWORD=your-secure-password
 
 # 生产环境
 N8N_WEBHOOK_URL=https://your-n8n.com/webhook/lead
 DIFY_API_BASE_URL=https://api.dify.ai/v1
 DIFY_API_KEY=app-xxxxxxxxxxxxx
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
+ADMIN_PASSWORD=your-secure-password
 ```
 
 ## 注意事项
@@ -44,6 +52,7 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 1. **不要提交 `.env.local` 文件**：该文件已添加到 `.gitignore`
 2. **生产环境**：在部署平台（如 Vercel）上配置环境变量
 3. **API 密钥安全**：确保 API 密钥妥善保管，不要泄露
+
 
 
 

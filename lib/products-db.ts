@@ -222,3 +222,4 @@ export async function getRecommendedProducts(
   // Return top 6
   return productsWithScores.slice(0, 6).map((item) => item.product);
 }
+

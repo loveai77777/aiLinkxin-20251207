@@ -1,4 +1,3 @@
-import { requireAuth } from "@/lib/admin/auth";
 import { createSupabaseClient } from "@/lib/supabaseClient";
 import Link from "next/link";
 
@@ -21,7 +20,6 @@ async function getProducts() {
 }
 
 export default async function AdminPicksPage() {
-  await requireAuth();
   const products = await getProducts();
 
   return (
@@ -90,3 +88,4 @@ export default async function AdminPicksPage() {
     </div>
   );
 }
+

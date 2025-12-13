@@ -1,4 +1,3 @@
-import { requireAuth } from "@/lib/admin/auth";
 import { createSupabaseClient } from "@/lib/supabaseClient";
 import { notFound } from "next/navigation";
 import PlaybookForm from "@/components/admin/PlaybookForm";
@@ -26,7 +25,6 @@ export default async function EditPlaybookPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAuth();
   const { id } = await params;
   const playbook = await getPlaybook(parseInt(id));
 
@@ -41,3 +39,4 @@ export default async function EditPlaybookPage({
     </div>
   );
 }
+
