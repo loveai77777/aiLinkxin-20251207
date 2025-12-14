@@ -1,5 +1,5 @@
 import { createSeoMetadata } from "@/lib/seo";
-import LeadForm from "@/components/LeadForm";
+import ContactForm from "@/components/contact/ContactForm";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = createSeoMetadata({
@@ -10,9 +10,9 @@ export const metadata: Metadata = createSeoMetadata({
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-8 sm:py-12 md:py-20 px-4 sm:px-6">
+    <div className="min-h-screen bg-gray-50 py-6 sm:py-8 md:py-12 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 items-start">
           {/* Left Section - Text Content */}
           <div className="flex flex-col space-y-4 sm:space-y-6">
             {/* "Get in touch" Badge */}
@@ -34,7 +34,7 @@ export default function ContactPage() {
 
           {/* Right Section - Form Card */}
           <div className="w-full">
-            <LeadForm type="consultation" source="contact-page" />
+            <ContactForm />
           </div>
         </div>
       </div>
