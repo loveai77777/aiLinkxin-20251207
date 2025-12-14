@@ -106,13 +106,13 @@ export default function PlaybookBrowseClient({
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4">
+    <div className="mx-auto w-full max-w-5xl px-2 md:px-4">
       {/* Popular Categories Chips */}
-      <div className="mb-4">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="mb-3 md:mb-4">
+        <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
           <button
             onClick={resetFilters}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${
               selectedCategory === "" && selectedTag === "" && searchQuery === ""
                 ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                 : "bg-white/5 text-white/70 border border-white/10 hover:bg-white/10"
@@ -128,7 +128,7 @@ export default function PlaybookBrowseClient({
                 setSelectedTag("");
                 setSearchQuery("");
               }}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${
                 selectedCategory === category
                   ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                   : "bg-white/5 text-white/70 border border-white/10 hover:bg-white/10"
@@ -141,8 +141,8 @@ export default function PlaybookBrowseClient({
       </div>
 
       {/* Trending Tags Chips */}
-      <div className="mb-4">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="mb-3 md:mb-4">
+        <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
           {tags.map((tag) => (
             <button
               key={tag}
@@ -151,7 +151,7 @@ export default function PlaybookBrowseClient({
                 setSelectedCategory("");
                 setSearchQuery("");
               }}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${
                 selectedTag === tag
                   ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                   : "bg-white/5 text-white/70 border border-white/10 hover:bg-white/10"
@@ -164,7 +164,7 @@ export default function PlaybookBrowseClient({
       </div>
 
       {/* Compact Search Bar */}
-      <div className="mb-8 flex items-center gap-4">
+      <div className="mb-6 md:mb-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
         <div className="relative w-full max-w-xl">
           <input
             type="text"
@@ -175,7 +175,7 @@ export default function PlaybookBrowseClient({
               setSelectedCategory("");
               setSelectedTag("");
             }}
-            className="h-12 w-full rounded-full bg-white/5 border border-white/10 px-5 pr-12 text-sm md:text-base text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/15 transition-all"
+            className="h-10 md:h-12 w-full rounded-full bg-white/5 border border-white/10 px-4 md:px-5 pr-10 md:pr-12 text-sm md:text-base text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/15 transition-all"
           />
           <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-white/50">
             <svg
@@ -197,14 +197,14 @@ export default function PlaybookBrowseClient({
 
       {/* Featured/Recommended Section */}
       {featuredPlaybooks.length > 0 && (
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-white mb-6">Featured</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+        <section className="mb-8 md:mb-12">
+          <h2 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Featured</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
             {featuredPlaybooks.map((playbook) => (
               <Link
                 key={playbook.id}
                 href={`/playbook/${playbook.slug}`}
-                className="group block p-3 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 hover:bg-slate-800/50 transition-all"
+                className="group block p-2.5 md:p-3 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 hover:bg-slate-800/50 transition-all"
               >
                 {/* Category Badge */}
                 {playbook.categoryName && (
@@ -214,7 +214,7 @@ export default function PlaybookBrowseClient({
                     </span>
                   </div>
                 )}
-                <h3 className="text-base font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors line-clamp-2">
+                <h3 className="text-sm md:text-base font-semibold text-white mb-1.5 md:mb-2 group-hover:text-emerald-400 transition-colors line-clamp-2">
                   {playbook.title}
                 </h3>
                 {/* Tags (up to 3) */}
@@ -271,7 +271,7 @@ export default function PlaybookBrowseClient({
             </div>
           )}
           {filteredPlaybooks.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
               {filteredPlaybooks.map((playbook) => (
                 <PlaybookCard key={playbook.id} playbook={playbook} />
               ))}

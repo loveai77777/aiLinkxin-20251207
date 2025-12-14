@@ -61,7 +61,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className={`${inter.className} bg-white text-gray-900 min-h-screen font-sans antialiased`}>
+      <body className={`${inter.className} min-h-screen font-sans antialiased`}>
         <Header />
         <main>{children}</main>
         <Footer />

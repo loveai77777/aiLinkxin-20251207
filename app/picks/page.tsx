@@ -80,24 +80,24 @@ export default async function PicksPage({ searchParams }: PageProps) {
 
   return (
     <div className="min-h-screen bg-pink-50">
-      <div className="mx-auto max-w-7xl px-4 py-16">
+      <div className="mx-auto max-w-7xl px-4 py-6 md:py-16">
         {/* Hero Section */}
-        <section className="py-12 mb-12">
+        <section className="py-6 md:py-12 mb-6 md:mb-12">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+            <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-gray-900">
               AILINKXIN PICKS
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-sm md:text-lg text-gray-600 max-w-2xl mx-auto px-2">
               Curated picks: tools, apps, and products we've tried and found useful.
             </p>
           </div>
         </section>
 
         {/* Filter Chips */}
-        <section className="mb-8">
+        <section className="mb-6 md:mb-8">
           {/* Categories Row */}
-          <div className="mb-6">
-            <h2 className="text-sm font-semibold text-gray-700 mb-3">Categories</h2>
+          <div className="mb-4 md:mb-6">
+            <h2 className="text-xs md:text-sm font-semibold text-gray-700 mb-2 md:mb-3">Categories</h2>
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
               <Link
                 href={buildFilterUrl(undefined, selectedTag)}
@@ -127,7 +127,7 @@ export default async function PicksPage({ searchParams }: PageProps) {
 
           {/* Tags Row */}
           <div>
-            <h2 className="text-sm font-semibold text-gray-700 mb-3">Tags</h2>
+            <h2 className="text-xs md:text-sm font-semibold text-gray-700 mb-2 md:mb-3">Tags</h2>
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
               <Link
                 href={buildFilterUrl(selectedCategory, undefined)}
@@ -184,12 +184,12 @@ export default async function PicksPage({ searchParams }: PageProps) {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
             {filteredProducts.map((product) => (
               <Link
                 key={product.id}
                 href={`/picks/${product.slug}`}
-                className="group block bg-pink-100 border border-pink-200 rounded-xl p-4 hover:border-pink-300 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+                className="group block bg-pink-100 border border-pink-200 rounded-xl p-3 md:p-4 hover:border-pink-300 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
               >
                 {/* Category Badge */}
                 {product.category && (

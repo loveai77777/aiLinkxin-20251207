@@ -80,16 +80,16 @@ export default async function PlaybookPage() {
   }));
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-16">
+    <div className="mx-auto max-w-7xl px-4 py-6 md:py-16">
       {/* Main Content */}
-      <div className="mt-8">
+      <div className="mt-4 md:mt-8">
         {/* Hero Section */}
-        <section className="py-12 mb-12">
+        <section className="py-6 md:py-12 mb-6 md:mb-12">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+            <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-white">
               AILINKXIN PLAYBOOK
             </h1>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+            <p className="text-sm md:text-lg text-gray-400 max-w-2xl mx-auto px-2">
               Practical guides and tutorials to help you master AI automation
               and business optimization step by step.
             </p>
