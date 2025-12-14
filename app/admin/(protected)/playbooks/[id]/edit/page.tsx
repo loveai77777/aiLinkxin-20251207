@@ -1,4 +1,4 @@
-import { createSupabaseClient } from "@/lib/supabaseClient";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import PlaybookForm from "@/components/admin/PlaybookForm";
 
@@ -6,7 +6,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 async function getPlaybook(id: number) {
-  const supabase = createSupabaseClient();
+  // Use same admin client as list page to ensure data consistency
+  const supabase = createAdminSupabaseClient();
   const { data, error } = await supabase
     .from("playbooks")
     .select("*")
@@ -39,4 +40,6 @@ export default async function EditPlaybookPage({
     </div>
   );
 }
+
+
 

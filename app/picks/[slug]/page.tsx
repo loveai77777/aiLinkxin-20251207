@@ -85,7 +85,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               Tip: You can copy short excerpts.
             </p>
 
-            {/* Meta Row: Category + Tags + Updated Date */}
+            {/* Meta Row: Category + Tags */}
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-8 pb-6 border-b border-pink-200">
               {product.category && (
                 <span className="inline-block px-3 py-1 rounded-full bg-pink-200 border border-pink-300 text-gray-700 font-medium">
@@ -103,11 +103,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     </span>
                   ))}
                 </div>
-              )}
-              {product.updated_at && (
-                <time className="text-gray-500">
-                  Updated {formatDate(product.updated_at)}
-                </time>
               )}
             </div>
           </header>
@@ -175,7 +170,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
                     {/* Tags (up to 3) */}
                     {recProduct.tags && recProduct.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-4">
+                      <div className="flex flex-wrap gap-2">
                         {recProduct.tags.slice(0, 3).map((tag, idx) => (
                           <span
                             key={idx}
@@ -186,19 +181,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
                         ))}
                       </div>
                     )}
-
-                    {/* Meta: Date */}
-                    <div className="flex items-center gap-3 text-xs text-gray-500 pt-4 border-t border-pink-200">
-                      {recProduct.created_at && (
-                        <time>
-                          {new Date(recProduct.created_at).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })}
-                        </time>
-                      )}
-                    </div>
                   </Link>
                 ))}
               </div>
@@ -232,4 +214,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
     </div>
   );
 }
+
+
 

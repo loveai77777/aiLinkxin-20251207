@@ -300,16 +300,6 @@ export default async function PlaybookDetailPage({ params }: PageProps) {
 
           {/* Meta Information */}
           <div className="flex flex-wrap items-center gap-4 text-sm text-white mb-4">
-            {playbook.published_at && (
-              <time dateTime={playbook.published_at}>
-                Published: {formatDate(playbook.published_at)}
-              </time>
-            )}
-            {playbook.updated_at && playbook.updated_at !== playbook.published_at && (
-              <time dateTime={playbook.updated_at}>
-                Updated: {formatDate(playbook.updated_at)}
-              </time>
-            )}
             {playbook.difficulty_level && (
               <span className="flex items-center gap-1.5">
                 <svg
@@ -459,9 +449,6 @@ export default async function PlaybookDetailPage({ params }: PageProps) {
                     {recommended.title}
                   </h3>
                   <div className="flex items-center gap-3 text-sm text-gray-400">
-                    {recommended.published_at && (
-                      <time>{formatDate(recommended.published_at)}</time>
-                    )}
                     {recommended.reading_minutes && (
                       <span>{formatReadingTime(recommended.reading_minutes)}</span>
                     )}

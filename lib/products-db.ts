@@ -37,12 +37,15 @@ export async function getAllProducts(): Promise<{
   const supabase = createSupabaseClient();
 
   // Only select columns that exist in public.products table
-  const selectString = "id, slug, name, short_description, category, tags, content_markdown, created_at, updated_at";
+  // Only show published products (exclude draft and archived)
+  // Include status in select to ensure it's available for filtering
+  const selectString = "id, slug, name, short_description, category, tags, content_markdown, status, created_at, updated_at";
   const query = supabase
     .from("products")
     .select(selectString)
-    .order("updated_at", { ascending: false, nullsLast: true })
-    .order("created_at", { ascending: false, nullsLast: true });
+    .eq("status", "published")
+    .order("updated_at", { ascending: false, nullsFirst: false })
+    .order("created_at", { ascending: false, nullsFirst: false });
 
   const { data, error } = await query;
 
@@ -95,11 +98,14 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   const supabase = createSupabaseClient();
 
   // Only select columns that exist in public.products table
-  const selectString = "id, slug, name, short_description, category, tags, content_markdown, created_at, updated_at";
+  // Only show published products
+  // Include status in select to ensure it's available for filtering
+  const selectString = "id, slug, name, short_description, category, tags, content_markdown, status, created_at, updated_at";
   const query = supabase
     .from("products")
     .select(selectString)
     .eq("slug", slug)
+    .eq("status", "published")
     .single();
 
   const { data: product, error } = await query;
@@ -155,13 +161,15 @@ export async function getRecommendedProducts(
 
   const supabase = createSupabaseClient();
 
-  // Get all products except current
-  const selectString = "id, slug, name, short_description, category, tags, content_markdown, created_at, updated_at";
+  // Get all published products except current
+  // Include status in select to ensure it's available for filtering
+  const selectString = "id, slug, name, short_description, category, tags, content_markdown, status, created_at, updated_at";
   const { data, error } = await supabase
     .from("products")
     .select(selectString)
     .neq("slug", currentSlug)
-    .order("updated_at", { ascending: false, nullsLast: true });
+    .eq("status", "published")
+    .order("updated_at", { ascending: false, nullsFirst: false });
 
   if (error) {
     console.error("[getRecommendedProducts] Supabase error:", {
@@ -222,4 +230,6 @@ export async function getRecommendedProducts(
   // Return top 6
   return productsWithScores.slice(0, 6).map((item) => item.product);
 }
+
+
 

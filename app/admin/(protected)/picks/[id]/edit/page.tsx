@@ -1,4 +1,4 @@
-import { createSupabaseClient } from "@/lib/supabaseClient";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import ProductForm from "@/components/admin/ProductForm";
 
@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 async function getProduct(id: number) {
-  const supabase = createSupabaseClient();
+  const supabase = createAdminSupabaseClient();
   const { data, error } = await supabase
     .from("products")
     .select("*")
@@ -21,7 +21,7 @@ async function getProduct(id: number) {
 }
 
 async function getProductLinks(productId: number) {
-  const supabase = createSupabaseClient();
+  const supabase = createAdminSupabaseClient();
   const { data, error } = await supabase
     .from("picks_product_links")
     .select("*")
@@ -56,4 +56,6 @@ export default async function EditProductPage({
     </div>
   );
 }
+
+
 

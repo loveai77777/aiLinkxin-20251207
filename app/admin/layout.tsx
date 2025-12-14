@@ -1,8 +1,6 @@
 import Link from "next/link";
-import LogoutButton from "@/components/admin/LogoutButton";
 
 // Admin layout - separate from public site, minimal design
-// Only applies to /admin/* routes (not /admin/login which has its own layout)
 export default function AdminLayout({
   children,
 }: {
@@ -28,13 +26,12 @@ export default function AdminLayout({
                 Picks
               </Link>
               <Link
-                href="/admin/playbook"
+                href="/admin/playbooks"
                 className="text-sm text-gray-600 hover:text-gray-900"
               >
-                Playbook
+                Playbooks
               </Link>
             </div>
-            <LogoutButton />
           </div>
         </div>
       </nav>

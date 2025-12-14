@@ -62,7 +62,7 @@ export async function getPicksProducts(): Promise<{
     .from("picks_products")
     .select("id, slug, name, short_description, description, hero_image_url, intro_video_url, product_type, status, is_featured, sort_order, categories, tags")
     .eq("status", "published")
-    .order("sort_order", { ascending: true, nullsLast: true })
+    .order("sort_order", { ascending: true, nullsFirst: false })
     .order("id", { ascending: false });
 
   if (productsError) {
@@ -186,4 +186,6 @@ export async function getPicksFilterData(): Promise<{
     tags: Array.from(tagsSet).sort(),
   };
 }
+
+
 

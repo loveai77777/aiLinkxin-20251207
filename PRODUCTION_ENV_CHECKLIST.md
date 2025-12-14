@@ -93,8 +93,8 @@ grep -A 20 "env_file:" docker-compose.yml
 services:
   nextjs:
     environment:
-      - NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=xxx
+      - NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
     # OR
     env_file:
       - .env.production

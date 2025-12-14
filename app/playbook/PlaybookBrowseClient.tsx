@@ -44,30 +44,33 @@ export default function PlaybookBrowseClient({
   const categories = dbCategories.length > 0 ? dbCategories : FALLBACK_CATEGORIES;
   const tags = dbTags.length > 0 ? dbTags : FALLBACK_TAGS;
 
-  // Get featured playbooks (top 3-6)
+  // Get featured playbooks (latest 3 published) - exclude from main list
   const featuredPlaybooks = useMemo(() => {
-    // TODO: Use is_featured or sort_order if available
-    // For now, fallback to newest 3-6 by updated_at
+    // Show newest 3 by published_at or updated_at
     return initialPlaybooks
-      .filter((p) => p.updatedAt)
+      .filter((p) => p.publishedAt || p.updatedAt)
       .sort((a, b) => {
-        if (!a.updatedAt || !b.updatedAt) return 0;
-        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        const aDate = a.publishedAt || a.updatedAt;
+        const bDate = b.publishedAt || b.updatedAt;
+        if (!aDate || !bDate) return 0;
+        return new Date(bDate).getTime() - new Date(aDate).getTime();
       })
-      .slice(0, 6);
+      .slice(0, 3);
   }, [initialPlaybooks]);
 
+  // Get featured IDs to exclude from main list
+  const featuredIds = useMemo(() => {
+    return new Set(featuredPlaybooks.map((p) => p.id));
+  }, [featuredPlaybooks]);
+
   // Filter playbooks with priority: category > tag > search
+  // IMPORTANT: Show ALL published playbooks, not just filtered subset
   const filteredPlaybooks = useMemo(() => {
     let filtered = [...initialPlaybooks];
 
     // Priority 1: Category filter
     if (selectedCategory) {
-      // TODO: Match by category name when category field is available
-      // For now, filter by tags that might match category
       filtered = filtered.filter((playbook) => {
-        // If playbook has tags matching category, include it
-        // This is a simple fallback - should be replaced with proper category matching
         return playbook.tags.some(
           (tag) => tag.label.toLowerCase() === selectedCategory.toLowerCase()
         );
@@ -92,10 +95,9 @@ export default function PlaybookBrowseClient({
       );
     }
 
-    // Exclude featured playbooks from main grid
-    const featuredIds = new Set(featuredPlaybooks.map((p) => p.id));
+    // Exclude featured playbooks from main list to avoid duplicates
     return filtered.filter((p) => !featuredIds.has(p.id));
-  }, [initialPlaybooks, selectedCategory, selectedTag, searchQuery, featuredPlaybooks]);
+  }, [initialPlaybooks, selectedCategory, selectedTag, searchQuery, featuredIds]);
 
   const resetFilters = () => {
     setSelectedCategory("");
@@ -197,25 +199,36 @@ export default function PlaybookBrowseClient({
       {featuredPlaybooks.length > 0 && (
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-white mb-6">Featured</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
             {featuredPlaybooks.map((playbook) => (
               <Link
                 key={playbook.id}
                 href={`/playbook/${playbook.slug}`}
-                className="group block p-4 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 hover:bg-slate-800/50 transition-all"
+                className="group block p-3 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 hover:bg-slate-800/50 transition-all"
               >
-                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors line-clamp-2">
+                {/* Category Badge */}
+                {playbook.categoryName && (
+                  <div className="mb-2">
+                    <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                      {playbook.categoryName}
+                    </span>
+                  </div>
+                )}
+                <h3 className="text-base font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors line-clamp-2">
                   {playbook.title}
                 </h3>
-                {playbook.summary && (
-                  <p className="text-sm text-gray-400 line-clamp-2 mb-2">
-                    {playbook.summary}
-                  </p>
-                )}
-                {playbook.hasAffiliateLinks && (
-                  <span className="inline-block px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-xs rounded border border-emerald-500/20">
-                    Includes recommendations
-                  </span>
+                {/* Tags (up to 3) */}
+                {playbook.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {playbook.tags.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag.id}
+                        className="inline-block px-1.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 border border-slate-700 text-gray-400"
+                      >
+                        {tag.label}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </Link>
             ))}
@@ -258,7 +271,7 @@ export default function PlaybookBrowseClient({
             </div>
           )}
           {filteredPlaybooks.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
               {filteredPlaybooks.map((playbook) => (
                 <PlaybookCard key={playbook.id} playbook={playbook} />
               ))}
@@ -269,6 +282,7 @@ export default function PlaybookBrowseClient({
     </div>
   );
 }
+
 
 
 

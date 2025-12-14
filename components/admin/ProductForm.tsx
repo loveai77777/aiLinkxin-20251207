@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClientSupabaseClient } from "@/lib/supabase/client";
 
 interface ProductFormProps {
   product?: any;
@@ -21,6 +20,7 @@ export default function ProductForm({ product, links: initialLinks = [] }: Produ
     category: product?.category || "",
     tags: product?.tags?.join(", ") || "",
     content_markdown: product?.content_markdown || "",
+    status: product?.status || "draft",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,17 +29,9 @@ export default function ProductForm({ product, links: initialLinks = [] }: Produ
     setError(null);
 
     try {
-      const supabase = createClientSupabaseClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        router.push("/admin/login");
-        return;
-      }
-
       const tagsArray = formData.tags
         .split(",")
-        .map((t) => t.trim())
+        .map((t: string) => t.trim())
         .filter(Boolean);
 
       const payload: any = {
@@ -49,43 +41,49 @@ export default function ProductForm({ product, links: initialLinks = [] }: Produ
         category: formData.category || null,
         tags: tagsArray.length > 0 ? tagsArray : null,
         content_markdown: formData.content_markdown || null,
+        status: formData.status,
         updated_at: new Date().toISOString(),
       };
 
       let productId: number;
 
       if (product) {
-        // Update existing
-        const { data, error: updateError } = await supabase
-          .from("products")
-          .update(payload)
-          .eq("id", product.id)
-          .select()
-          .single();
+        // Update existing - use API route
+        const response = await fetch(`/api/admin/product/${product.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
 
-        if (updateError) throw updateError;
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "Failed to update product");
+        }
         productId = product.id;
       } else {
-        // Create new
+        // Create new - use API route
         payload.created_at = new Date().toISOString();
-        const { data, error: insertError } = await supabase
-          .from("products")
-          .insert(payload)
-          .select()
-          .single();
+        
+        const response = await fetch("/api/admin/product", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
 
-        if (insertError) throw insertError;
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "Failed to create product");
+        }
         productId = data.id;
       }
 
-      // Save links
+      // Save links using API
       if (productId) {
         // Delete existing links
         if (product) {
-          await supabase
-            .from("picks_product_links")
-            .delete()
-            .eq("product_id", productId);
+          await fetch(`/api/admin/product/${productId}/links`, {
+            method: "DELETE",
+          });
         }
 
         // Insert new links
@@ -102,11 +100,16 @@ export default function ProductForm({ product, links: initialLinks = [] }: Produ
           }));
 
         if (linksToInsert.length > 0) {
-          const { error: linksError } = await supabase
-            .from("picks_product_links")
-            .insert(linksToInsert);
+          const response = await fetch(`/api/admin/product/${productId}/links`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ links: linksToInsert }),
+          });
 
-          if (linksError) throw linksError;
+          if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || "Failed to save links");
+          }
         }
       }
 
@@ -204,16 +207,30 @@ export default function ProductForm({ product, links: initialLinks = [] }: Produ
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Tags (comma-separated)
+            Status
           </label>
-          <input
-            type="text"
-            value={formData.tags}
-            onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-            placeholder="tag1, tag2, tag3"
+          <select
+            value={formData.status}
+            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
+          >
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
         </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Tags (comma-separated)
+        </label>
+        <input
+          type="text"
+          value={formData.tags}
+          onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+          placeholder="tag1, tag2, tag3"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        />
       </div>
 
       <div>
@@ -325,4 +342,6 @@ export default function ProductForm({ product, links: initialLinks = [] }: Produ
     </form>
   );
 }
+
+
 

@@ -18,10 +18,10 @@ export default async function AdminDashboardPage() {
         </Link>
 
         <Link
-          href="/admin/playbook"
+          href="/admin/playbooks"
           className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:shadow-md transition-shadow"
         >
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Manage Playbook</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Manage Playbooks</h2>
           <p className="text-gray-600 text-sm">Create and edit playbook articles</p>
         </Link>
 

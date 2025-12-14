@@ -184,60 +184,40 @@ export default async function PicksPage({ searchParams }: PageProps) {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {filteredProducts.map((product) => (
               <Link
                 key={product.id}
                 href={`/picks/${product.slug}`}
-                className="group block bg-pink-100 border border-pink-200 rounded-2xl p-8 hover:border-pink-300 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+                className="group block bg-pink-100 border border-pink-200 rounded-xl p-4 hover:border-pink-300 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
               >
                 {/* Category Badge */}
                 {product.category && (
-                  <div className="mb-3">
-                    <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-pink-200 border border-pink-300 text-gray-700">
+                  <div className="mb-2">
+                    <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-pink-200 border border-pink-300 text-gray-700">
                       {product.category}
                     </span>
                   </div>
                 )}
 
                 {/* Product Name */}
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-pink-700 transition-colors">
+                <h3 className="text-base font-semibold text-gray-900 mb-2 group-hover:text-pink-700 transition-colors line-clamp-2">
                   {product.name}
                 </h3>
 
-                {/* Short Description */}
-                {product.short_description && (
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-3 leading-relaxed">
-                    {product.short_description}
-                  </p>
-                )}
-
-                {/* Tags (up to 3) */}
+                {/* Tags */}
                 {product.tags && product.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="flex flex-wrap gap-1.5">
                     {product.tags.slice(0, 3).map((tag, idx) => (
                       <span
                         key={idx}
-                        className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-white border border-pink-200 text-gray-600"
+                        className="inline-block px-1.5 py-0.5 rounded-full text-xs font-medium bg-white border border-pink-200 text-gray-600"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
                 )}
-
-                {/* Meta: Date */}
-                <div className="flex items-center gap-3 text-xs text-gray-500 pt-4 border-t border-pink-200">
-                  {product.created_at && (
-                    <time>
-                      {new Date(product.created_at).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </time>
-                  )}
-                </div>
               </Link>
             ))}
           </div>
@@ -246,4 +226,6 @@ export default async function PicksPage({ searchParams }: PageProps) {
     </div>
   );
 }
+
+
 

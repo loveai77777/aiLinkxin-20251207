@@ -1,4 +1,5 @@
 import { createSupabaseClient } from "@/lib/supabaseClient";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import type { PlaybookCardData } from "@/components/playbook/PlaybookCard";
 
 /**
@@ -44,12 +45,12 @@ export async function getPublishedPlaybooks(): Promise<PlaybookCardData[]> {
 
   const supabase = createSupabaseClient();
 
-  // Fetch published playbooks
+  // Fetch published playbooks - only show those with status = 'published'
   const { data, error } = await supabase
     .from("playbooks")
     .select("id, slug, title, summary, published_at, updated_at, reading_minutes, has_affiliate_links")
     .eq("status", "published")
-    .order("published_at", { ascending: false });
+    .order("published_at", { ascending: false, nullsFirst: false });
 
   if (error) {
     console.error("Error fetching published playbooks:", error);
@@ -200,4 +201,79 @@ export async function getPlaybookBySlug(
     audio_duration_seconds: playbook.audio_duration_seconds || null,
   };
 }
+
+/**
+ * Get all playbooks (admin - includes draft and published)
+ */
+export async function getPlaybooks() {
+  const supabase = createAdminSupabaseClient();
+  const { data, error } = await supabase
+    .from("playbooks")
+    .select("id, slug, title, status, published_at, updated_at")
+    .order("updated_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching playbooks:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Get a single playbook by ID (admin - can see draft and published)
+ */
+export async function getPlaybookById(id: number) {
+  const supabase = createAdminSupabaseClient();
+  const { data, error } = await supabase
+    .from("playbooks")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return data;
+}
+
+/**
+ * Create a new playbook (admin)
+ */
+export async function createPlaybook(data: any) {
+  const supabase = createAdminSupabaseClient();
+  const { data: result, error } = await supabase
+    .from("playbooks")
+    .insert(data)
+    .select("id")
+    .single();
+
+  if (error) {
+    console.error("Error creating playbook:", error);
+    return null;
+  }
+
+  return result;
+}
+
+/**
+ * Update an existing playbook (admin)
+ */
+export async function updatePlaybook(id: number, data: any) {
+  const supabase = createAdminSupabaseClient();
+  const { error } = await supabase
+    .from("playbooks")
+    .update(data)
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error updating playbook:", error);
+    return false;
+  }
+
+  return true;
+}
+
+
 

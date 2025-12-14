@@ -14,6 +14,9 @@ export async function POST(request: NextRequest) {
     };
 
     // Add optional fields only if provided
+    if (payload.subtitle !== undefined) {
+      insertData.subtitle = payload.subtitle;
+    }
     if (payload.summary !== undefined) {
       insertData.summary = payload.summary;
     }
@@ -23,11 +26,20 @@ export async function POST(request: NextRequest) {
     if (payload.cover_image_url !== undefined) {
       insertData.cover_image_url = payload.cover_image_url;
     }
-    if (payload.status !== undefined) {
-      insertData.status = payload.status;
-      if (payload.status === "published" && payload.published_at) {
-        insertData.published_at = payload.published_at;
-      }
+    if (payload.reading_minutes !== undefined) {
+      insertData.reading_minutes = payload.reading_minutes;
+    }
+    // Set status (default to 'draft' if not provided)
+    insertData.status = payload.status || "draft";
+    
+    // Set category_id if provided
+    if (payload.category_id !== undefined) {
+      insertData.category_id = payload.category_id;
+    }
+    
+    // Set published_at when status is 'published'
+    if (insertData.status === "published") {
+      insertData.published_at = payload.published_at || new Date().toISOString();
     }
 
     const { data, error } = await supabase
@@ -44,6 +56,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Save tags if provided
+    if (payload.tagIds && Array.isArray(payload.tagIds) && payload.tagIds.length > 0) {
+      const playbookTags = payload.tagIds.map((tagId: number) => ({
+        playbook_id: data.id,
+        tag_id: tagId,
+      }));
+
+      await supabase.from("playbook_tags").insert(playbookTags);
+    }
+
     return NextResponse.json({ ok: true, id: data.id });
   } catch (error: any) {
     return NextResponse.json(
@@ -52,4 +74,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
 

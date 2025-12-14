@@ -25,26 +25,46 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 
 ### 管理员密码
 ```
-ADMIN_PASSWORD=your-secure-password
+ADMIN_PASSWORD=YOUR_ADMIN_PASSWORD
 ```
 用于后台管理系统登录。访问 `/admin/login` 时需要使用此密码。
+
+### Supabase Service Role Key (Admin Only)
+```
+SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
+```
+用于后台管理系统的 Supabase 客户端，绕过 RLS 权限检查。仅在 admin 路由中使用。
+
+### Admin Session Secret (Optional)
+```
+ADMIN_SESSION_SECRET=YOUR_ADMIN_SESSION_SECRET
+```
+用于加密 admin session token。如果不设置，将使用默认值。
 
 ## 示例配置
 
 ```env
 # 开发环境
+NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
 N8N_WEBHOOK_URL=http://localhost:5678/webhook/test
 DIFY_API_BASE_URL=https://api.dify.ai/v1
-DIFY_API_KEY=app-xxxxxxxxxxxxx
+DIFY_API_KEY=YOUR_DIFY_API_KEY
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-ADMIN_PASSWORD=your-secure-password
+ADMIN_PASSWORD=YOUR_ADMIN_PASSWORD
+ADMIN_SESSION_SECRET=YOUR_ADMIN_SESSION_SECRET
 
 # 生产环境
+NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
 N8N_WEBHOOK_URL=https://your-n8n.com/webhook/lead
 DIFY_API_BASE_URL=https://api.dify.ai/v1
-DIFY_API_KEY=app-xxxxxxxxxxxxx
+DIFY_API_KEY=YOUR_DIFY_API_KEY
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
-ADMIN_PASSWORD=your-secure-password
+ADMIN_PASSWORD=YOUR_ADMIN_PASSWORD
+ADMIN_SESSION_SECRET=YOUR_ADMIN_SESSION_SECRET
 ```
 
 ## 注意事项

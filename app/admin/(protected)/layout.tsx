@@ -1,20 +1,11 @@
-import { getAdminSession } from "@/lib/admin/session";
-import { redirect } from "next/navigation";
-import LogoutButton from "@/components/admin/LogoutButton";
+import Link from "next/link";
 
-// Protected layout - only wraps pages in (protected) route group
-export default async function ProtectedAdminLayout({
+// Admin layout - no authentication required
+export default function ProtectedAdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Check session (middleware already protects, but double-check)
-  const isAuthenticated = await getAdminSession();
-  
-  if (!isAuthenticated) {
-    redirect("/admin/login");
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b border-gray-200">
@@ -22,14 +13,13 @@ export default async function ProtectedAdminLayout({
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center space-x-6">
               <h1 className="text-xl font-bold text-gray-900">AILINKXIN Admin</h1>
-              <a
+              <Link
                 href="/"
                 className="text-sm text-gray-600 hover:text-gray-900"
               >
                 ← Back to main site
-              </a>
+              </Link>
             </div>
-            <LogoutButton />
           </div>
         </div>
       </nav>
@@ -39,4 +29,6 @@ export default async function ProtectedAdminLayout({
     </div>
   );
 }
+
+
 
