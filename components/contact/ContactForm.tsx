@@ -60,6 +60,11 @@ export default function ContactForm() {
       newErrors.email = "Please enter a valid email address";
     }
 
+    // Message is required
+    if (!formData.message.trim()) {
+      newErrors.message = "Message is required";
+    }
+
     // Interested In is now optional, no validation needed
 
     // Honeypot check
@@ -73,12 +78,9 @@ export default function ContactForm() {
   };
 
   const isFormValid = (): boolean => {
-    return (
-      formData.fullName.trim() !== "" &&
-      formData.email.trim() !== "" &&
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
-      formData.honeypot === ""
-    );
+    // Only check honeypot for disabling button
+    // Let validation show errors on submit instead
+    return formData.honeypot === "";
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -92,38 +94,97 @@ export default function ContactForm() {
       return;
     }
 
+    // Check message before submitting
+    if (!formData.message.trim()) {
+      setErrors({
+        message: "Message is required",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
-    // Simulate form submission (no actual API call)
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowSuccess(true);
-      // Reset form
-      setFormData({
-        fullName: "",
-        email: "",
-        interestedIn: "",
-        phone: "",
-        companyName: "",
-        website: "",
-        message: "",
-        honeypot: "",
+    try {
+      // Prepare payload with required fields
+      const payload = {
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim(),
+        message: formData.message.trim(),
+        interestedIn: formData.interestedIn || null,
+        phone: formData.phone || null,
+        companyName: formData.companyName || null,
+        website: formData.website || null, // No URL validation - accept any string
+      };
+
+      console.log("Submitting payload", payload);
+      
+      // Submit to API (inserts to Supabase, then triggers n8n webhook)
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
-      setErrors({});
 
-      // Scroll success message into view
-      setTimeout(() => {
-        successMessageRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
+      console.log("API response status:", response.status);
+
+      const result = await response.json().catch((parseError) => {
+        console.error("Failed to parse API response:", parseError);
+        throw new Error("Failed to parse server response");
+      });
+
+      console.log("API response data:", result);
+
+      // Only show success if ok=true
+      if (result.ok === true && result.id) {
+        console.log("Form submission successful, id:", result.id);
+        
+        // Show success message
+        setShowSuccess(true);
+        
+        // Reset form
+        setFormData({
+          fullName: "",
+          email: "",
+          interestedIn: "",
+          phone: "",
+          companyName: "",
+          website: "",
+          message: "",
+          honeypot: "",
         });
-      }, 100);
+        setErrors({});
 
-      // Hide success message after 5 seconds
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 5000);
-    }, 500);
+        // Scroll success message into view
+        setTimeout(() => {
+          successMessageRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+          });
+        }, 100);
+
+        // Hide success message after 5 seconds
+        setTimeout(() => {
+          setShowSuccess(false);
+        }, 5000);
+      } else {
+        // API returned error or unexpected response - display server error message
+        const errorMessage = result.error || "Submission failed";
+        console.error("Form submission failed:", errorMessage);
+        setErrors({
+          submit: errorMessage, // Display server error message
+        });
+      }
+    } catch (error: any) {
+      console.error("Form submission error:", error);
+      console.error("Error details:", error.message, error.stack);
+      setErrors({
+        submit: "Something went wrong. Please try again later.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -265,7 +326,7 @@ export default function ContactForm() {
             onChange={handleChange}
             disabled={isSubmitting}
             placeholder="https://yourwebsite.com or no website"
-            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-[48px]"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[36px] sm:min-h-[40px]"
             style={{ WebkitTapHighlightColor: "transparent" }}
           />
         </div>
@@ -312,9 +373,16 @@ export default function ContactForm() {
             rows={2}
             disabled={isSubmitting}
             placeholder="Write your message..."
-            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent transition-all resize-y disabled:opacity-50 disabled:cursor-not-allowed min-h-[60px]"
+            className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border rounded-lg text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all resize-y disabled:opacity-50 disabled:cursor-not-allowed min-h-[60px] ${
+              errors.message
+                ? "border-red-300 focus:ring-red-300"
+                : "border-gray-200 focus:ring-gray-300"
+            }`}
             style={{ WebkitTapHighlightColor: "transparent" }}
           />
+          {errors.message && (
+            <p className="mt-1 text-xs text-red-600">{errors.message}</p>
+          )}
         </div>
 
         {/* Generic Error Message */}
@@ -333,7 +401,7 @@ export default function ContactForm() {
         >
           <button
             type="submit"
-            disabled={isSubmitting || !isFormValid()}
+            disabled={isSubmitting}
             className="relative w-full sm:w-auto py-2 sm:py-2 px-5 sm:px-6 bg-black text-white text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-900 active:scale-95 focus:outline-none touch-manipulation min-h-[36px] sm:min-h-[40px]"
             style={{ WebkitTapHighlightColor: "transparent" }}
           >
