@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
-import WhatsAppFloatingWidget from "../src/components/WhatsAppFloatingWidget";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -65,7 +64,6 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen font-sans antialiased`}>
         <Header />
         <main>{children}</main>
-        <WhatsAppFloatingWidget />
         <Footer />
       </body>
     </html>
