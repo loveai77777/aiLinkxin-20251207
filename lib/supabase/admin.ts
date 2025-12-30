@@ -1,3 +1,7 @@
+import 'server-only';
+
+// LOCKBOX: Server-only module. Never import from client components. Never expose service role keys.
+
 import { createClient } from "@supabase/supabase-js";
 
 /**
@@ -24,6 +28,7 @@ export function createAdminSupabaseClient() {
     },
   });
 }
+
 
 
 
