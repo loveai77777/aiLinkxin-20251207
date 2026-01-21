@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og';
-
-// Route segment config
+// Keep edge runtime for @vercel/og; removing causes Invalid URL during build
 export const runtime = 'edge';
 
 // Image generation
