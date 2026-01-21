@@ -21,7 +21,7 @@ export default function LoginForm({ nextPath }: { nextPath: string }) {
 
       if (!r.ok) {
         const data = await r.json().catch(() => ({}));
-        throw new Error(data?.message || "Login failed");
+        throw new Error(data?.error || data?.message || "Login failed");
       }
 
       // 登录成功：跳回 next

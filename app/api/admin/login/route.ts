@@ -1,44 +1,49 @@
+// app/api/admin/login/route.ts
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 
-export const runtime = "nodejs"; // 确保在 Node 环境跑 bcrypt
+async function sha256Hex(input: string) {
+  const enc = new TextEncoder().encode(input);
+  const digest = await crypto.subtle.digest("SHA-256", enc);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json().catch(() => ({}));
-    const password = (body?.password || "").toString();
+export async function POST(req: Request) {
+  const adminPassword = process.env.ADMIN_PASSWORD || "";
 
-    if (!password.trim()) {
-      return NextResponse.json({ error: "Missing password" }, { status: 400 });
-    }
-
-    const hash = process.env.ADMIN_PASSWORD_HASH;
-    if (!hash) {
-      // 不要输出 hash 本身
-      return NextResponse.json(
-        { error: "Server missing ADMIN_PASSWORD_HASH" },
-        { status: 500 }
-      );
-    }
-
-    const ok = await bcrypt.compare(password, hash);
-    if (!ok) {
-      return NextResponse.json({ error: "Invalid password" }, { status: 401 });
-    }
-
-    const res = NextResponse.json({ ok: true });
-
-    // 设置登录 cookie（middleware 会检查这个）
-    res.cookies.set("admin_auth", "1", {
-      httpOnly: true,
-      secure: true, // 线上 https 必须
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 14, // 14 天
-    });
-
-    return res;
-  } catch {
-    return NextResponse.json({ error: "Bad request" }, { status: 400 });
+  if (!adminPassword) {
+    return NextResponse.json(
+      { error: "ADMIN_PASSWORD is not set" },
+      { status: 500 }
+    );
   }
+
+  const body = await req.json().catch(() => null);
+  const password = typeof body?.password === "string" ? body.password : "";
+
+  if (!password || password !== adminPassword) {
+    return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+  }
+
+  // cookie 值用 hash（比直接写 1 更好）
+  const token = await sha256Hex(adminPassword);
+
+  const res = NextResponse.json({ ok: true });
+
+  // 在开发环境（localhost）中，secure 应该为 false
+  const isProduction = process.env.NODE_ENV === "production";
+  const isHttps = req.url.startsWith("https://");
+  
+  res.cookies.set({
+    name: "admin_auth",
+    value: token,
+    httpOnly: true,
+    secure: isProduction && isHttps, // 仅在 HTTPS 生产环境中使用 secure
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+  });
+
+  return res;
 }
