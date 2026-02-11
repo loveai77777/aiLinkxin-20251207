@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
     const N8N_WEBHOOK_URL =
       process.env.N8N_WEBHOOK_URL ||
       process.env.N8N_CONTACT_WEBHOOK_URL ||
-      "https://n8n.ailinkxin.com/webhook-test/ailinkxin-contact-lead";
+      "https://n8n.ailinkxin.com/webhook/ailinkxin-contact-lead";
 
     if (N8N_WEBHOOK_URL) {
       try {
@@ -111,6 +111,8 @@ export async function POST(request: NextRequest) {
           status: insertedData.status,
           notify_status: insertedData.notify_status,
           created_at: insertedData.created_at,
+          // 商户区分
+          shop_id: "ART_SPA_001",
           // Also include original form field names for compatibility
           fullName: fullName,
           email: email,
